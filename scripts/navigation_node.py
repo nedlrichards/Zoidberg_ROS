@@ -11,7 +11,7 @@ import rospy
 
 import time
 
-import zoidberg_ros.msg import DVL
+import zoidberg_ros.msg
 from std_msgs.msg import Float64, Header
 from sensor_msgs.msg import FluidPressure
 
@@ -23,17 +23,15 @@ class Navigation:
         self.target_heading = None
         self.target_vx = None
         self.target_vy = None
-
+        # setup ros communication
         rospy.Subscriber("/depth", FluidPressure, self._set_curr_depth)
         rospy.Subscriber("/heading", Float64, self._set_curr_heading)
         # channels where guidance publishes control commands
         self.navigationp = rospy.Publisher("/navigation",
                                            zoidberg_ros.msg.Navigation,
                                            queue_size=10)
-
         # publish comand rate, Hertz
         self.rate = rospy.Rate(10)
-
         # initilize current state to nonsense values
         self.curr_depth = -9999
         self.curr_heading = -9999.
@@ -69,4 +67,4 @@ class Navigation:
 if __name__ == '__main__':
     rospy.init_node('navigation_node')
     server = Navigation()
-    rospy.spin()
+    server.talker()
